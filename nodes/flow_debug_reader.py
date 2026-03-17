@@ -3,13 +3,12 @@ import os
 
 import httpx
 
-from gen.axiom_official_axiom_agent_messages_messages_pb2 import TestResult
+from gen.axiom_official_axiom_agent_messages_messages_pb2 import FlowBuildContext
 from gen.axiom_logger import AxiomLogger, AxiomSecrets
 
 
-
-def flow_debug_reader(log: AxiomLogger, secrets: AxiomSecrets, input: TestResult) -> TestResult:
-    """Fetch the debug event stream for a flow execution."""
+def flow_debug_reader(log: AxiomLogger, secrets: AxiomSecrets, input: FlowBuildContext) -> FlowBuildContext:
+    """Fetch the debug event stream for the flow execution and attach it to the context."""
 
     if not input.session_id and not input.execution_id:
         return input
@@ -32,11 +31,9 @@ def flow_debug_reader(log: AxiomLogger, secrets: AxiomSecrets, input: TestResult
         )
         if resp.status_code == 200:
             events = resp.json()
-            enriched = TestResult()
-            enriched.CopyFrom(input)
-            enriched.output_json = json.dumps({"debug_events": events, "session_id": session_id})
-            return enriched
+            # Attach debug events as JSON in fix_instructions for downstream analysis.
+            input.fix_instructions = json.dumps({"debug_events": events, "session_id": session_id})
     except Exception as e:
-        log.warning(f"Failed to fetch flow debug events: {e}")
+        log.warn(f"Failed to fetch flow debug events: {e}")
 
     return input
