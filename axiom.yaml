@@ -5,19 +5,30 @@ description: Debugs failed Axiom flow executions by reading the debug event stre
 author: Axiom Official
 license: MIT
 nodes:
-  - name: FlowDebugReader
-    input: TestResult
-    output: TestResult
-    description: Fetches the debug event stream for a flow execution and attaches it to the TestResult.
-  - name: FlowTraceAnalyser
-    input: TestResult
-    output: AnalysisResult
-    description: Analyses the flow debug trace to identify graph topology errors, adapter mismatches, or node failures.
-    required_secrets:
-      - ANTHROPIC_API_KEY
-  - name: FlowFixApplier
-    input: AnalysisResult
-    output: AgentProgress
-    description: Routes fix instructions to the FlowDesigner to rebuild the problematic portion of the graph.
+    - name: FlowDebugReader
+      description: Fetches the debug event stream for a flow execution and attaches it to the TestResult.
+      input: TestResult
+      output: TestResult
+    - name: FlowTraceAnalyser
+      description: Analyses the flow debug trace to identify graph topology errors, adapter mismatches, or node failures.
+      input: TestResult
+      output: AnalysisResult
+      required_secrets:
+        - ANTHROPIC_API_KEY
+    - name: FlowFixApplier
+      description: Routes fix instructions to the FlowDesigner to rebuild the problematic portion of the graph.
+      input: AnalysisResult
+      output: AgentProgress
 imports:
-  - axiom-official/axiom-agent-messages
+    - package: axiom-official/axiom-agent-messages
+      version: 0.1.0
+      messages:
+        - NodeSpec
+        - PublishResult
+        - CompileResult
+        - AgentRequest
+        - PackageSpec
+        - FlowSpec
+        - TestResult
+        - AnalysisResult
+        - AgentProgress
