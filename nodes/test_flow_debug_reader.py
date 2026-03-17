@@ -1,3 +1,5 @@
+from nodes.flow_debug_reader import flow_debug_reader
+
+
 def test_flow_debug_reader_imports():
-    import nodes.flow_debug_reader as m
-    assert hasattr(m, "flow_debug_reader")
+    assert callable(flow_debug_reader)
