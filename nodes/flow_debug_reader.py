@@ -14,7 +14,7 @@ def flow_debug_reader(log: AxiomLogger, secrets: AxiomSecrets, input: FlowBuildC
         return input
 
     ingress_url = os.environ.get("INGRESS_URL", "http://axiom-ingress:80")
-    axiom_api_key = secrets.get("AXIOM_API_KEY", "")
+    axiom_api_key, _ = secrets.get("AXIOM_API_KEY")
     tenant_id = os.environ.get("TENANT_ID", "01AXIOMOFFICIAL000000000000")
 
     session_id = input.session_id or input.execution_id

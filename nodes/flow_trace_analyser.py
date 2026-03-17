@@ -18,7 +18,7 @@ def flow_trace_analyser(log: AxiomLogger, secrets: AxiomSecrets, input: FlowBuil
         input.error_summary = "Flow executed successfully"
         return input
 
-    api_key = secrets.get("ANTHROPIC_API_KEY")
+    api_key, _ = secrets.get("ANTHROPIC_API_KEY")
     client = anthropic.Anthropic(api_key=api_key)
 
     debug_trace = ""
