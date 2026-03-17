@@ -5,26 +5,25 @@ description: Debugs failed Axiom flow executions by reading the debug event stre
 author: Axiom Official
 license: MIT
 nodes:
-    - name: FlowDebugReader
-      description: Fetches the debug event stream for the flow execution and attaches it as JSON in the context.
-      input: FlowBuildContext
-      output: FlowBuildContext
-    - name: FlowTraceAnalyser
-      description: Analyses the flow debug trace to identify topology errors, adapter mismatches, or node failures. Populates has_error, fix_instructions, and error_summary.
-      input: FlowBuildContext
-      output: FlowBuildContext
-      required_secrets:
-        - ANTHROPIC_API_KEY
-    - name: FlowFixApplier
-      description: Routes fix instructions to the FlowDesigner to rebuild the problematic portion of the graph and returns AgentProgress.
-      input: FlowBuildContext
-      output: AgentProgress
+  - name: FlowDebugReader
+    input: FlowBuildContext
+    output: FlowBuildContext
+    description: Fetches the debug event stream for the flow execution and attaches it as JSON in the context.
+    required_secrets:
+      - AXIOM_API_KEY
+  - name: FlowTraceAnalyser
+    input: FlowBuildContext
+    output: FlowBuildContext
+    description: Analyses the flow debug trace to identify topology errors, adapter mismatches, or node failures. Populates has_error, fix_instructions, and error_summary.
+    required_secrets:
+      - ANTHROPIC_API_KEY
+  - name: FlowFixApplier
+    input: FlowBuildContext
+    output: AgentProgress
+    description: Routes fix instructions to the FlowDesigner to rebuild the problematic portion of the graph and returns AgentProgress.
 imports:
-    - package: axiom-official/axiom-agent-messages
-      version: 0.1.0
-      messages:
-        - FlowBuildContext
-        - AgentProgress
-        - AgentRequest
-        - NodeSpec
-        - PackageBuildContext
+  - package: axiom-official/axiom-agent-messages
+    version: 0.1.0
+    messages:
+      - FlowBuildContext
+      - AgentProgress
