@@ -1,0 +1,23 @@
+name: axiom-official/axiom-flow-debugger
+version: 0.1.0
+language: python
+description: Debugs failed Axiom flow executions by reading the debug event stream.
+author: Axiom Official
+license: MIT
+nodes:
+  - name: FlowDebugReader
+    input: TestResult
+    output: TestResult
+    description: Fetches the debug event stream for a flow execution and attaches it to the TestResult.
+  - name: FlowTraceAnalyser
+    input: TestResult
+    output: AnalysisResult
+    description: Analyses the flow debug trace to identify graph topology errors, adapter mismatches, or node failures.
+    required_secrets:
+      - ANTHROPIC_API_KEY
+  - name: FlowFixApplier
+    input: AnalysisResult
+    output: AgentProgress
+    description: Routes fix instructions to the FlowDesigner to rebuild the problematic portion of the graph.
+imports:
+  - axiom-official/axiom-agent-messages
